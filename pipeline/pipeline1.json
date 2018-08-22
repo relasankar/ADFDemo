@@ -1,0 +1,31 @@
+{
+	"name": "pipeline1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute SSIS Package1",
+				"type": "ExecuteSSISPackage",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false
+				},
+				"typeProperties": {
+					"packageLocation": {
+						"packagePath": "Demo/Projects/DemoSree.dtsx"
+					},
+					"loggingLevel": "Basic",
+					"connectVia": {
+						"referenceName": "integrationRuntime1",
+						"type": "IntegrationRuntimeReference"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "Demo"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
