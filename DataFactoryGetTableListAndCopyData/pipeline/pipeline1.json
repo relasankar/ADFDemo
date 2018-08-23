@@ -12,7 +12,7 @@
 					},
 					"activities": [
 						{
-							"name": "Copy Data1",
+							"name": "Copy1",
 							"type": "Copy",
 							"policy": {
 								"timeout": "7.00:00:00",
