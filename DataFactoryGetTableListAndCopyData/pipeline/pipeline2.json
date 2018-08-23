@@ -75,7 +75,6 @@
 						"Content-Type": "application/json"
 					},
 					"body": {
-						"message": "@{activity('Copy1').output.dataWritten}",
 						"dataFactoryName": "@{pipeline().DataFactory}",
 						"pipelineName": "@{pipeline().Pipeline}",
 						"receiver": "@pipeline().parameters.receiver"
@@ -106,7 +105,6 @@
 						"Content-Type": "application/json"
 					},
 					"body": {
-						"message": "@{activity('Copy1').output.dataWritten}",
 						"dataFactoryName": "@{pipeline().DataFactory}",
 						"pipelineName": "@{pipeline().Pipeline}",
 						"receiver": "@pipeline().parameters.receiver"
