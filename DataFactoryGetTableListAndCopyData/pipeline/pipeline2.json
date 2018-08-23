@@ -28,7 +28,7 @@
 				}
 			},
 			{
-				"name": "Execute Pipeline1",
+				"name": "Copy1",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
@@ -56,7 +56,7 @@
 				"type": "WebActivity",
 				"dependsOn": [
 					{
-						"activity": "Execute Pipeline1",
+						"activity": "Copy1",
 						"dependencyConditions": [
 							"Failed"
 						]
@@ -75,7 +75,7 @@
 						"Content-Type": "application/json"
 					},
 					"body": {
-						"message": "@{activity('Execute Pipeline1').output.dataWritten}",
+						"message": "@{activity('Copy1').output.dataWritten}",
 						"dataFactoryName": "@{pipeline().DataFactory}",
 						"pipelineName": "@{pipeline().Pipeline}",
 						"receiver": "@pipeline().parameters.receiver"
@@ -87,7 +87,7 @@
 				"type": "WebActivity",
 				"dependsOn": [
 					{
-						"activity": "Execute Pipeline1",
+						"activity": "Copy1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -106,7 +106,7 @@
 						"Content-Type": "application/json"
 					},
 					"body": {
-						"message": "@{activity('Execute Pipeline1').output.dataWritten}",
+						"message": "@{activity('Copy1').output.dataWritten}",
 						"dataFactoryName": "@{pipeline().DataFactory}",
 						"pipelineName": "@{pipeline().Pipeline}",
 						"receiver": "@pipeline().parameters.receiver"
