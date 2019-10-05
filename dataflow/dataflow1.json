@@ -1,0 +1,42 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText1",
+						"type": "DatasetReference"
+					},
+					"name": "blob"
+				},
+				{
+					"dataset": {
+						"referenceName": "SalesData",
+						"type": "DatasetReference"
+					},
+					"name": "sqlsalesdata"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "slinkop",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Join1"
+				},
+				{
+					"name": "dcfullname"
+				}
+			],
+			"script": "\n\nsource(output(\n\t\tSalesOrderID as string,\n\t\tSalesOrderDetailID as string,\n\t\tCarrierTrackingNumber as string,\n\t\tOrderQty as string,\n\t\tProductID as string,\n\t\tSpecialOfferID as string,\n\t\tUnitPrice as string,\n\t\tUnitPriceDiscount as string,\n\t\tLineTotal as string,\n\t\trowguid as string,\n\t\tModifiedDate as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> blob\nsource(output(\n\t\tSalesOrderID as string,\n\t\tRevisionNumber as string,\n\t\tOrderDate as string,\n\t\tDueDate as string,\n\t\tShipDate as string,\n\t\tStatus as string,\n\t\tOnlineOrderFlag as string,\n\t\tSalesOrderNumber as string,\n\t\tPurchaseOrderNumber as string,\n\t\tAccountNumber as string,\n\t\tCustomerID as string,\n\t\tSalesPersonID as string,\n\t\tTerritoryID as string,\n\t\tBillToAddressID as string,\n\t\tShipToAddressID as string,\n\t\tShipMethodID as string,\n\t\tCreditCardID as string,\n\t\tCreditCardApprovalCode as string,\n\t\tCurrencyRateID as string,\n\t\tSubTotal as string,\n\t\tTaxAmt as string,\n\t\tFreight as string,\n\t\tTotalDue as string,\n\t\tComment as string,\n\t\trowguid as string,\n\t\tModifiedDate as string,\n\t\tfirstname as string,\n\t\tlastname as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> sqlsalesdata\nblob, sqlsalesdata join(blob@SalesOrderID == sqlsalesdata@SalesOrderID,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> Join1\nJoin1 derive(Fullname = concat(firstname,lastname)) ~> dcfullname\ndcfullname sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SalesoutputData1.txt'],\n\tmapColumn(\n\t\tSalesOrderID = blob@SalesOrderID,\n\t\tSalesOrderDetailID,\n\t\tCarrierTrackingNumber,\n\t\tOrderQty,\n\t\tProductID,\n\t\tSpecialOfferID,\n\t\tUnitPrice,\n\t\tUnitPriceDiscount,\n\t\tLineTotal,\n\t\trowguid = blob@rowguid,\n\t\tModifiedDate = blob@ModifiedDate,\n\t\tRevisionNumber,\n\t\tOrderDate,\n\t\tDueDate,\n\t\tShipDate,\n\t\tStatus,\n\t\tOnlineOrderFlag,\n\t\tSalesOrderNumber,\n\t\tPurchaseOrderNumber,\n\t\tAccountNumber,\n\t\tCustomerID,\n\t\tSalesPersonID,\n\t\tTerritoryID,\n\t\tBillToAddressID,\n\t\tShipToAddressID,\n\t\tShipMethodID,\n\t\tCreditCardID,\n\t\tCreditCardApprovalCode,\n\t\tCurrencyRateID,\n\t\tSubTotal,\n\t\tTaxAmt,\n\t\tFreight,\n\t\tTotalDue,\n\t\tComment,\n\t\tfirstname,\n\t\tlastname,\n\t\tFullname\n\t),\n\tpartitionBy('hash', 1),\n\tdateFormat:'MM/dd/yyyy') ~> sink1"
+		}
+	}
+}

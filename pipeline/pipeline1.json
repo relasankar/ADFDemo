@@ -3,29 +3,121 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Execute SSIS Package1",
-				"type": "ExecuteSSISPackage",
+				"name": "Lookup1",
+				"type": "Lookup",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
-					"secureOutput": false
+					"secureOutput": false,
+					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
-					"packageLocation": {
-						"packagePath": "Demo/Projects/DemoSree.dtsx"
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
 					},
-					"loggingLevel": "Basic",
-					"connectVia": {
-						"referenceName": "integrationRuntime1",
-						"type": "IntegrationRuntimeReference"
+					"dataset": {
+						"referenceName": "DelimitedText2",
+						"type": "DatasetReference"
 					}
 				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Lookup1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Tablename",
+					"value": {
+						"value": "@activity('Lookup1').output.firstRow.Tablename",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": {
+							"value": "select * from @{variables('Tablename')}",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".csv"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "SqlServerTable1",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DelimitedText3",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
-		"folder": {
-			"name": "Demo"
-		}
+		"variables": {
+			"Tablename": {
+				"type": "String"
+			},
+			"ADLpath": {
+				"type": "String"
+			},
+			"ADLContainer": {
+				"type": "String",
+				"defaultValue": "firmenichdatalake1"
+			}
+		},
+		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

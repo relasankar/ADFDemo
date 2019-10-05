@@ -1,0 +1,363 @@
+{
+	"name": "dataflowsample",
+	"properties": {
+		"activities": [
+			{
+				"name": "dataflow1",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "Copy Data1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": true,
+					"secureInput": true
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "dataflow1",
+						"type": "DataFlowReference"
+					}
+				}
+			},
+			{
+				"name": "Copy Data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "\t\t select  so.* , firstname,lastname from   [Sales].[SalesOrderHeader] so \n\t\t inner join [Sales].[Customer] cus on cus.CustomerID=so.CustomerID\n\t\t inner join [Person].[Person]  ind on ind.BusinessEntityID=cus.personid\n\t\t \n\t   where so.SalesOrderID in (43659,43660,43661,43662, 43663)"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": "txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "SalesOrderID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "SalesOrderID",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "RevisionNumber",
+									"type": "Byte"
+								},
+								"sink": {
+									"name": "RevisionNumber",
+									"type": "Byte"
+								}
+							},
+							{
+								"source": {
+									"name": "OrderDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "OrderDate",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "DueDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "DueDate",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "ShipDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "ShipDate",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "Status",
+									"type": "Byte"
+								},
+								"sink": {
+									"name": "Status",
+									"type": "Byte"
+								}
+							},
+							{
+								"source": {
+									"name": "OnlineOrderFlag",
+									"type": "Boolean"
+								},
+								"sink": {
+									"name": "OnlineOrderFlag",
+									"type": "Boolean"
+								}
+							},
+							{
+								"source": {
+									"name": "SalesOrderNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SalesOrderNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PurchaseOrderNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "PurchaseOrderNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "AccountNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "AccountNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CustomerID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "CustomerID",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "SalesPersonID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "SalesPersonID",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "TerritoryID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "TerritoryID",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "BillToAddressID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "BillToAddressID",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "ShipToAddressID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "ShipToAddressID",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "ShipMethodID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "ShipMethodID",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "CreditCardID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "CreditCardID",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "CreditCardApprovalCode",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CreditCardApprovalCode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CurrencyRateID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "CurrencyRateID",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "SubTotal",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "SubTotal",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "TaxAmt",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "TaxAmt",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "Freight",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Freight",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "TotalDue",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "TotalDue",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "Comment",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Comment",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "rowguid",
+									"type": "Guid"
+								},
+								"sink": {
+									"name": "rowguid",
+									"type": "Guid"
+								}
+							},
+							{
+								"source": {
+									"name": "ModifiedDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "ModifiedDate",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "firstname",
+									"type": "String"
+								},
+								"sink": {
+									"name": "firstname",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "lastname",
+									"type": "String"
+								},
+								"sink": {
+									"name": "lastname",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SqlServerTable1",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SalesData",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": []
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
