@@ -31,7 +31,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Filter1",
+						"activity": "Filter",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -94,7 +94,7 @@
 				}
 			},
 			{
-				"name": "Filter1",
+				"name": "Filter",
 				"type": "Filter",
 				"dependsOn": [
 					{
